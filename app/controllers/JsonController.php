@@ -2,6 +2,8 @@
 
 class JsonController extends Controller {
     
+    public $jsonp = true;
+    
     public function __construct()
     {
         $controller = $this;
@@ -15,7 +17,9 @@ class JsonController extends Controller {
         {
             header('Content-Type: application/json; charset=utf-8');
             
-            echo json_encode((array) get_object_vars($controller));
+            $output = json_encode((array) get_object_vars($controller));
+            
+            echo $controller->jsonp ? Input::get('callback') . '(' . $output . ');' : $output;
         });
     }
     

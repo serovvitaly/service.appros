@@ -14,7 +14,7 @@ class TezTourController extends JsonController {
     }
     
     
-    public function postSearch()
+    public function getSearch()
     {
         $data = array(
             'countryId'        => '', //=1104 – id страны отдыха;
@@ -41,9 +41,30 @@ class TezTourController extends JsonController {
             'birthday2'        => '', //=12.06.2005 – день рождения второго ребенка. Параметр должен быть указан только в случае размещения двух детей.
         );
         
-        $url = 'http://search.tez-tour.com/toursearch/getResult?accommodationId=2&after=21.11.2013&before=30.11.2013&cityId=345&countryId=1104%C2%A4cy=5561&hotelClassBetter=true&hotelClassId=2569&hotelInStop=false&locale=ru&nightsMax=15&nightsMin=7&noTicketsFrom=false&noTicketsTo=false&priceMax=999999&priceMin=0&rAndBBetter=true&rAndBId=2424&tourId=1285&formatResult=true&xml=true';
+        $url = 'http://search.tez-tour.com/toursearch/getResult?accommodationId=2&after=21.11.2013&before=30.11.2013&cityId=345&countryId=1104&currency=8390&hotelClassBetter=true&hotelClassId=2569&hotelInStop=false&locale=ru&nightsMax=15&nightsMin=7&noTicketsFrom=false&noTicketsTo=false&priceMax=999999&priceMin=0&rAndBBetter=true&rAndBId=2424&tourId=1285&formatResult=true&xml=true';
         
-        return file_get_contents($url);
+        
+        $sxml = new SimpleXMLElement(file_get_contents($url));
+        //header('Content-Type: text/plain; charset=utf-8');
+        //print_r($sxml);
+        
+        $success = (bool) $sxml->success;
+        
+        if (isset($sxml->success) AND $success === true) {
+            
+            $this->success = true;
+            
+            $data = array_values( (array) $sxml->data );
+            
+            if (is_array($data) AND count($data) == 1) {
+                $this->result = $data[0];
+            }
+            else {
+                $this->result = $data;
+            }
+        }
+        
+        //$this->result = (string) $sxml->success;
     }
 
 }
