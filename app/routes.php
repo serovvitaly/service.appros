@@ -12,4 +12,9 @@
 */
 
 Route::controller('/tez', 'TezTourController');
-Route::controller('/', 'HomeController');
+
+
+Route::get('/', function()
+{
+    return 'Access denied!';
+});
