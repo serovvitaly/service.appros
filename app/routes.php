@@ -11,7 +11,5 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::controller('/tez', 'TezTourController');
+Route::controller('/', 'HomeController');
